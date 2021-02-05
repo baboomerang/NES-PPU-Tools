@@ -1,5 +1,4 @@
-#ifndef TOOLBAR_H
-#define TOOLBAR_H
+#pragma once
 
 #include <QMainWindow>
 #include <QApplication>
@@ -15,5 +14,3 @@ public:
 private:
 
 };
-
-#endif //TOOLBAR_H
