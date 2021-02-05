@@ -1,5 +1,4 @@
-#ifndef MENUBAR_H
-#define MENUBAR_H
+#pragma once
 
 #include <QMainWindow>
 #include <QApplication>
@@ -14,6 +13,3 @@ public:
 private:
 
 };
-
-
-#endif //MENUBAR_H
