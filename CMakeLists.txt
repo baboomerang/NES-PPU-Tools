@@ -13,7 +13,7 @@ find_package(Qt5 COMPONENTS
 
 add_executable(mainprogram
     main.cpp
-    menubar.cpp
+    MainWindow.cpp
 )
 
 target_link_libraries(mainprogram
