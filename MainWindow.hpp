@@ -8,8 +8,24 @@ class MainWindow : public QMainWindow {
 
 public:
     MainWindow(QWidget* parent = nullptr);
+    void loadFile(const QString &filename);
+
     virtual ~MainWindow();
 
-private:
+private slots:
+    //void newFile();
+    //void open();
+    //bool save();
+    //bool saveAs();
+    //void about();
+    //void documentWasModified();
 
+private:
+    void createActions(QMenuBar*);
+    //void createStatusBar(QStatusBar*);
+    //void readSettings();
+    //void writeSettings();
+    //bool maybeSave();
+    ///bool saveFile(const QString &filename);
+    //void setCurrentFile(const QString &filename);
 };
