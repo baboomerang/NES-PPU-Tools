@@ -8,16 +8,16 @@ class MainWindow : public QMainWindow {
 
 public:
     MainWindow(QWidget* parent = nullptr);
-    void loadFile(const QString &filename);
-
     virtual ~MainWindow();
 
+    void openFile(const QString& filename);
+
 private slots:
-    //void newFile();
-    //void open();
-    //bool save();
-    //bool saveAs();
-    //void about();
+    //void newfile();
+    void open();
+    void save();
+    void saveas();
+    void about();
     //void documentWasModified();
 
 private:

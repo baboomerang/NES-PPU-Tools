@@ -1,9 +1,11 @@
 #include <QAction>
-#include <QDebug>
+#include <QFileDialog>
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QToolBar>
 
+
+#include <QDebug>
 #include "MainWindow.hpp"
 
 
@@ -12,14 +14,51 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     createActions(menubar);
 
     QStatusBar* statusbar = statusBar();
+    statusbar->showMessage(tr("Ready"));
+    
+    //setUnifiedTitleAndToolBarOnMac(true); 
 }
 
 MainWindow::~MainWindow() {
 
 }
 
-void MainWindow::createActions(QMenuBar* menubar) {
+/* Slots */
 
+void MainWindow::newfile() {
+    return; 
+}
+
+void MainWindow::open() {
+    const QString filename = QFileDialog::getOpenFileName(this);
+
+    if (filename.isEmpty()) {
+        qDebug() << "No filename was given, ignoring open";
+        return;
+    }
+
+    qDebug() << "filename was given, filename: " + filename;
+    openFile(filename);
+}
+
+void MainWindow::openFile(const QString& filename) {
+
+}
+
+void MainWindow::save() {
+    return;
+}
+
+void MainWindow::saveas() {
+    return;
+}
+
+void MainWindow::about() {
+    return;
+}
+
+/* Populate the menubar with menu options and actions */
+void MainWindow::createActions(QMenuBar* menubar) {
     //create menus
     QMenu* filemenu = menubar->addMenu(tr("&File"));
     QMenu* editmenu = menubar->addMenu(tr("&Edit"));
@@ -61,6 +100,12 @@ void MainWindow::createActions(QMenuBar* menubar) {
     helpmenu->addAction(about);
     helpmenu->addAction(aboutqt);
 
+    //link dropdown option action to the appropriate slot
+    //connect(newf, &QAction::triggered, this, &MainWindow::newfile);
+    connect(open, &QAction::triggered, this, &MainWindow::open);
+    connect(save, &QAction::triggered, this, &MainWindow::save);
+    connect(saveas, &QAction::triggered, this, &MainWindow::saveas);
+    connect(about, &QAction::triggered, this, &MainWindow::about);
     connect(quit, &QAction::triggered, qApp, QApplication::quit);
 }
 
