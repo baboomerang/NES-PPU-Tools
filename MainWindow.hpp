@@ -13,7 +13,7 @@ public:
     void openFile(const QString& filename);
 
 private slots:
-    //void newfile();
+    void newfile();
     void open();
     void save();
     void saveas();
