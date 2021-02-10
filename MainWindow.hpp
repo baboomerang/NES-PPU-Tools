@@ -18,6 +18,10 @@ private slots:
     void save();
     void saveas();
     void about();
+    void undo();
+    void redo();
+    void preferences();
+    void fullscreen();
     //void documentWasModified();
 
 private:
