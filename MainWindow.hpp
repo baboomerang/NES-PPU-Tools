@@ -21,7 +21,7 @@ private slots:
     //void documentWasModified();
 
 private:
-    void createActions(QMenuBar*);
+    void initMenuBar(QMenuBar*);
     //void createStatusBar(QStatusBar*);
     //void readSettings();
     //void writeSettings();

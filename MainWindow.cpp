@@ -12,7 +12,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     QMenuBar* menubar = menuBar();
-    createActions(menubar);
+    initMenuBar(menubar);
 
     QStatusBar* statusbar = statusBar();
     statusbar->showMessage(tr("Ready"));
@@ -68,7 +68,7 @@ void MainWindow::openFile(const QString& filename) {
 }
 
 /* Populate the menubar with menu options and actions */
-void MainWindow::createActions(QMenuBar* menubar) {
+void MainWindow::initMenuBar(QMenuBar* menubar) {
     //create menus
     QMenu* filemenu = menubar->addMenu(tr("&File"));
     QMenu* editmenu = menubar->addMenu(tr("&Edit"));
@@ -79,10 +79,14 @@ void MainWindow::createActions(QMenuBar* menubar) {
     QAction* newf = new QAction("&New...", this);
     QAction* open = new QAction("&Open...", this);
     QAction* save = new QAction("&Save...", this);
-    QAction* saveas = new QAction("&Save as...", this);
+    QAction* saveas = new QAction("Save &As...", this);
     QAction* quit = new QAction("&Quit", this);
-    QAction* about = new QAction("&About", this);
-    QAction* aboutqt = new QAction("&About Qt", this);
+    QAction* undo = new QAction("&Undo", this);    
+    QAction* redo = new QAction("&Redo", this);
+    QAction* prefs = new QAction("&Preferences", this);
+    QAction* fscreen = new QAction("Fullscreen", this);
+    QAction* about = new QAction("About", this);
+    QAction* aboutqt = new QAction("About Qt", this);
 
     //add keyboard shortcuts and bind them automatically to the choice
     newf->setShortcut(QKeySequence::New);
@@ -90,13 +94,20 @@ void MainWindow::createActions(QMenuBar* menubar) {
     save->setShortcut(QKeySequence::Save);
     saveas->setShortcut(QKeySequence::SaveAs);
     quit->setShortcut(QKeySequence::Quit);
+    undo->setShortcut(QKeySequence::Undo);
+    redo->setShortcut(QKeySequence::Redo);
+    fscreen->setShortcut(QKeySequence::FullScreen);
 
-    //show extra information when user hovers over option
+    //show extra information when user hovers over the option
     newf->setStatusTip(tr("Create a new Nametable"));
     open->setStatusTip(tr("Open a Nametable"));
     save->setStatusTip(tr("Save this Nametable"));
     saveas->setStatusTip(tr("Save this Nametable with a different filename"));
     quit->setStatusTip(tr("Quit the NESPPU-Tool Suite"));
+    undo->setStatusTip(tr("Undo the last change"));
+    redo->setStatusTip(tr("Redo the last change"));
+    prefs->setStatusTip(tr("Open the preferences dialog"));
+    fscreen->setStatusTip(tr("Toggle fullscreen view"));
     about->setStatusTip(tr("About NESPPU-Tools"));
     aboutqt->setStatusTip(tr("About Qt"));
 
@@ -107,6 +118,10 @@ void MainWindow::createActions(QMenuBar* menubar) {
     filemenu->addAction(saveas);
     filemenu->addSeparator();
     filemenu->addAction(quit);
+    editmenu->addAction(undo);
+    editmenu->addAction(redo);
+    editmenu->addAction(prefs);
+    viewmenu->addAction(fscreen);
     helpmenu->addAction(about);
     helpmenu->addAction(aboutqt);
 
