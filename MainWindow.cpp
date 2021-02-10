@@ -4,7 +4,7 @@
 #include <QMessageBox>
 #include <QStatusBar>
 #include <QToolBar>
-
+#include <QTextEdit>
 
 #include <QDebug>
 #include "MainWindow.hpp"
@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     QStatusBar* statusbar = statusBar();
     statusbar->showMessage(tr("Ready"));
+
+    QTextEdit* textEdit = new QTextEdit;
+    setCentralWidget(textEdit);
     
     //setUnifiedTitleAndToolBarOnMac(true); 
 }
@@ -26,9 +29,17 @@ MainWindow::~MainWindow() {
 
 /* SLOTS */
 
+//==== PUBLIC SLOTS ============
+
+
+
+
+
+
+//==== PRIVATE SLOTS ============
 
 void MainWindow::newfile() {
-    return; 
+
 }
 
 void MainWindow::open() {
@@ -91,17 +102,17 @@ void MainWindow::initMenuBar(QMenuBar* menubar) {
     QMenu* helpmenu = menubar->addMenu(tr("&Help"));
 
     //create dropdown options / "actions"
-    QAction* newAct = new QAction("&New...", this);
-    QAction* openAct = new QAction("&Open...", this);
-    QAction* saveAct = new QAction("&Save...", this);
-    QAction* saveasAct = new QAction("Save &As...", this);
-    QAction* quitAct = new QAction("&Quit", this);
-    QAction* undoAct = new QAction("&Undo", this);    
-    QAction* redoAct = new QAction("&Redo", this);
-    QAction* prefsAct = new QAction("&Preferences", this);
-    QAction* fscreenAct = new QAction("Fullscreen", this);
-    QAction* aboutAct = new QAction("About", this);
-    QAction* aboutqtAct = new QAction("About Qt", this);
+    QAction* newAct = new QAction(tr("&New..."), this);
+    QAction* openAct = new QAction(tr("&Open..."), this);
+    QAction* saveAct = new QAction(tr("&Save..."), this);
+    QAction* saveasAct = new QAction(tr("Save &As..."), this);
+    QAction* quitAct = new QAction(tr("&Quit"), this);
+    QAction* undoAct = new QAction(tr("&Undo"), this);    
+    QAction* redoAct = new QAction(tr("&Redo"), this);
+    QAction* prefsAct = new QAction(tr("&Preferences"), this);
+    QAction* fscreenAct = new QAction(tr("Fullscreen"), this);
+    QAction* aboutAct = new QAction(tr("About"), this);
+    QAction* aboutqtAct = new QAction(tr("About Qt"), this);
 
     //add keyboard shortcuts and bind them automatically to the choice
     newAct->setShortcut(QKeySequence::New);
