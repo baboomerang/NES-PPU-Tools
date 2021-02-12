@@ -15,6 +15,7 @@ public:
 private slots:
     void newfile();
     void open();
+    void openRecent();
     void save();
     void saveas();
     void about();
