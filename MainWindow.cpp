@@ -12,6 +12,7 @@
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setAttribute(Qt::WA_DeleteOnClose);
+    setUnifiedTitleAndToolBarOnMac(true); 
 
     QMenuBar* menubar = menuBar();
     initMenuBar(menubar);
@@ -21,8 +22,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     QTextEdit* textEdit = new QTextEdit;
     setCentralWidget(textEdit);
-    
-    //setUnifiedTitleAndToolBarOnMac(true); 
 }
 
 MainWindow::~MainWindow() {
@@ -69,7 +68,7 @@ void MainWindow::saveas() {
 void MainWindow::about() {
     QMessageBox::about(this, tr("<b>About NESPPU-TOOLS</b>\n"),
             tr("<b>Example description: Insert text here</b>"
-            "QMainWindow, \n QMenuBar and QtoolBar."));
+                "QMainWindow, \n QMenuBar and QtoolBar."));
 }
 
 void MainWindow::undo() {
@@ -97,19 +96,23 @@ void MainWindow::openFile(const QString& filepath) {
 
     if (!file.open(QFile::ReadOnly)) {
         qDebug() << "ERROR: File does not exist or file cannot be read";
+        QMessageBox::critical(this, tr("File Error"),
+                tr("The file could not be found:\n%1").arg(filepath));
         return;
     }
 
-    if (file.bytesAvailable() != 1024) {
+    auto filesize = file.bytesAvailable();
+
+    if (filesize != 1024) {
+        file.close();
         qDebug() << "ERROR: File is not exactly 1024 bytes, fix the nametable file";
+        QMessageBox::critical(this, tr("File Size Error"),
+                tr("Nametable file cannot be opened due to a bad file size.\n"
+                   "File size is not exactly 1024 bytes. (%1 bytes)\n"
+                   "Given file: %2").arg(filesize).arg(filepath));
         return;
     }
 
-    /*if (!file.open(QFile::ReadOnly)) {
-        QMessageBox::warning(this, tr("File Error"),
-                             tr("The file could not be found:\n%1").arg(filepath));
-        return;
-    }*/
 }
 
 /* Populate the menubar with menus and actions */
