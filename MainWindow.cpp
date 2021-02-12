@@ -11,6 +11,8 @@
 
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
+    setAttribute(Qt::WA_DeleteOnClose);
+
     QMenuBar* menubar = menuBar();
     initMenuBar(menubar);
 
@@ -45,13 +47,14 @@ void MainWindow::newfile() {
 void MainWindow::open() {
     const QString filepath = QFileDialog::getOpenFileName(this);
 
-    if (filepath.isEmpty()) {
-        qDebug() << "No filepath was given, ignoring open";
-        return;
+    if (!filepath.isEmpty()) {
+        qDebug() << "filepath was given, filepath: " + filepath;
+        openFile(filepath);
     }
+}
 
-    qDebug() << "filepath was given, filepath: " + filepath;
-    openFile(filepath);
+void MainWindow::openRecent() {
+
 }
 
 void MainWindow::save() {
@@ -89,8 +92,24 @@ void MainWindow::fullscreen() {
 
 
 /* Opens a file and provides a valid file handler */
-void MainWindow::openFile(const QString& filename) {
+void MainWindow::openFile(const QString& filepath) {
+    QFile file(filepath);
 
+    if (!file.open(QFile::ReadOnly)) {
+        qDebug() << "ERROR: File does not exist or file cannot be read";
+        return;
+    }
+
+    if (file.bytesAvailable() != 1024) {
+        qDebug() << "ERROR: File is not exactly 1024 bytes, fix the nametable file";
+        return;
+    }
+
+    /*if (!file.open(QFile::ReadOnly)) {
+        QMessageBox::warning(this, tr("File Error"),
+                             tr("The file could not be found:\n%1").arg(filepath));
+        return;
+    }*/
 }
 
 /* Populate the menubar with menus and actions */
