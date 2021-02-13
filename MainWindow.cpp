@@ -36,7 +36,6 @@ MainWindow::~MainWindow() {
 
 
 
-
 //==== PRIVATE SLOTS ============
 
 void MainWindow::newfile() {
@@ -46,10 +45,13 @@ void MainWindow::newfile() {
 void MainWindow::open() {
     const QString filepath = QFileDialog::getOpenFileName(this);
 
-    if (!filepath.isEmpty()) {
-        qDebug() << "filepath was given, filepath: " + filepath;
-        openFile(filepath);
+    if (filepath.isEmpty()) {
+        qDebug() << "No file was given, ignoring open";
+        return;
     }
+
+    qDebug() << "filepath was given, filepath: " + filepath;
+    openFile(filepath);
 }
 
 void MainWindow::openRecent() {
@@ -102,7 +104,7 @@ void MainWindow::openFile(const QString& filepath) {
         return;
     }
 
-    auto filesize = file.bytesAvailable();
+    int filesize = file.bytesAvailable();
 
     if (filesize != 1024) {
         file.close();
