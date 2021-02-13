@@ -84,7 +84,8 @@ void MainWindow::preferences() {
 }
 
 void MainWindow::fullscreen() {
-
+    Qt::WindowStates currentstate = windowState();
+    setWindowState(currentstate ^ Qt::WindowFullScreen);
 }
 
 /* FUNCTIONS */
@@ -113,6 +114,10 @@ void MainWindow::openFile(const QString& filepath) {
         return;
     }
 
+    //now that the file is valid, create a custom nametable widget here
+    //create nametable view or create nametable object and link it to layout
+    //nametable object code/views should be in a separate file(s) with their own
+    //slots
 }
 
 /* Populate the menubar with menus and actions */
@@ -135,6 +140,9 @@ void MainWindow::initMenuBar(QMenuBar* menubar) {
     QAction* fscreenAct = new QAction(tr("Fullscreen"), this);
     QAction* aboutAct = new QAction(tr("About"), this);
     QAction* aboutqtAct = new QAction(tr("About Qt"), this);
+
+    //make options/actions into checkboxes (simplest way)
+    fscreenAct->setCheckable(true);
 
     //add keyboard shortcuts and bind them automatically to the choice
     newAct->setShortcut(QKeySequence::New);
