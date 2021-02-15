@@ -10,27 +10,37 @@ public:
     MainWindow(QWidget* parent = nullptr);
     virtual ~MainWindow();
 
-    void openFile(const QString& filename);
+signals:
+    void preferences();
+
+private:
+    QString ACTIVE_FILE;
+/*
+    QAction* newAct;
+    QAction* openAct;
+    QAction* saveAct;
+    QAction* saveasAct;
+    QAction* quitAct;
+    QAction* undoAct;
+    QAction* redoAct;
+    QAction* prefsAct;
+    QAction* fscreenAct;
+    QAction* aboutAct;
+    QAction* aboutqtAct;
+*/
+    QMenuBar* menubar;
+    QStatusBar* statusbar;
+    void initMenuBar(QMenuBar*);
+    void openFile(const QString&);
+    void saveFile(const QString&);
 
 private slots:
-    void newfile();
+    void newf();
     void open();
-    void openRecent();
     void save();
     void saveas();
     void about();
     void undo();
     void redo();
-    void preferences();
     void fullscreen();
-    //void documentWasModified();
-
-private:
-    void initMenuBar(QMenuBar*);
-    //void createStatusBar(QStatusBar*);
-    //void readSettings();
-    //void writeSettings();
-    //bool maybeSave();
-    ///bool saveFile(const QString &filename);
-    //void setCurrentFile(const QString &filename);
 };

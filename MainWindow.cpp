@@ -11,13 +11,13 @@
 
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
-    setAttribute(Qt::WA_DeleteOnClose);
     setUnifiedTitleAndToolBarOnMac(true); 
+    setAttribute(Qt::WA_DeleteOnClose);
 
-    QMenuBar* menubar = menuBar();
+    menubar = menuBar();
     initMenuBar(menubar);
 
-    QStatusBar* statusbar = statusBar();
+    statusbar = statusBar();
     statusbar->showMessage(tr("Ready"));
 
     QTextEdit* textEdit = new QTextEdit;
@@ -30,23 +30,16 @@ MainWindow::~MainWindow() {
 
 /* SLOTS */
 
-//==== PUBLIC SLOTS ============
-
-
-
-
-
-//==== PRIVATE SLOTS ============
-
-void MainWindow::newfile() {
+void MainWindow::newf() {
 
 }
 
 void MainWindow::open() {
-    const QString filepath = QFileDialog::getOpenFileName(this);
+    const QString filepath = QFileDialog::getOpenFileName(this, tr("Open File"),
+                             "", tr("Nametable Files (*.bin *.s *.*)"));
 
     if (filepath.isEmpty()) {
-        qDebug() << "No file was given, ignoring open";
+        qDebug() << "WARN: No filepath was given, ignoring open";
         return;
     }
 
@@ -54,23 +47,35 @@ void MainWindow::open() {
     openFile(filepath);
 }
 
-void MainWindow::openRecent() {
-
-}
-
 void MainWindow::save() {
-    //QString filepath = QFileDialog::getSaveFileName(this, tr("Save A"), filename);
-
+    if (ACTIVE_FILE.isEmpty()) {
+        saveas();   //trigger the slot, safe defense against empty files
+    } else {
+        saveFile(ACTIVE_FILE);
+    }
 }
 
 void MainWindow::saveas() {
+    QString filepath = QFileDialog::getSaveFileName(this, tr("Save File As"),
+                             "", tr("Nametable Files (*.bin *.s *.*)"));
+    
+    if (filepath.isEmpty()) {
+        qDebug() << "WARN: No filepath is given, ignoring save";
+        return;
+    }
 
+    qDebug() << "filepath was given, filepath: " + filepath;
+    saveFile(filepath);
 }
 
 void MainWindow::about() {
-    QMessageBox::about(this, tr("<b>About NESPPU-TOOLS</b>\n"),
-            tr("<b>Example description: Insert text here</b>"
-                "QMainWindow, \n QMenuBar and QtoolBar."));
+    QMessageBox::about(this, tr("About NESPPU-TOOLS"),
+            tr("This program is inspired by the original NES Screen Tool by Shiru.\n"
+               "It is intended to be a similar tool with better portability.\n\n"
+               "This program and author are not affiliated or supported by Nintendo.\n"
+               "This program is provided \"as-is\" with no warranty of any kind\n"
+               "including the implied warranty of merchantibility.\n"
+               "Use at your own risk."));
 }
 
 void MainWindow::undo() {
@@ -81,38 +86,45 @@ void MainWindow::redo() {
 
 }
 
-void MainWindow::preferences() {
-
-}
-
 void MainWindow::fullscreen() {
     Qt::WindowStates currentstate = windowState();
     setWindowState(currentstate ^ Qt::WindowFullScreen);
 }
 
+/*
+void QMainWindow::changeEvent(QEvent* eventg) {
+    if (event->type() == QEvent::WindowStateChange) {
+
+    }
+}
+*/
+
 /* FUNCTIONS */
 
 
-/* Opens a file and provides a valid file handler */
+/* Opens a file and provides a valid nametable handler */
 void MainWindow::openFile(const QString& filepath) {
     QFile file(filepath);
 
     if (!file.open(QFile::ReadOnly)) {
         qDebug() << "ERROR: File does not exist or file cannot be read";
-        QMessageBox::critical(this, tr("File Error"),
-                tr("The file could not be found:\n%1").arg(filepath));
+        QMessageBox::critical(this, tr("Open File"),
+                tr("The file could not be found:\n%1")
+                .arg(filepath));
         return;
     }
 
     int filesize = file.bytesAvailable();
 
-    if (filesize != 1024) {
+    if (filesize > 1024) {
         file.close();
-        qDebug() << "ERROR: File is not exactly 1024 bytes, fix the nametable file";
-        QMessageBox::critical(this, tr("File Size Error"),
+        qDebug() << "ERROR: File does not fit in 1024 bytes, fix the nametable file";
+        QMessageBox::critical(this, tr("Open File"),
                 tr("Nametable file cannot be opened due to a bad file size.\n"
                    "File size is not exactly 1024 bytes. (%1 bytes)\n"
-                   "Given file: %2").arg(filesize).arg(filepath));
+                   "Given file: %2")
+                .arg(filesize)
+                .arg(filepath));
         return;
     }
 
@@ -120,6 +132,26 @@ void MainWindow::openFile(const QString& filepath) {
     //create nametable view or create nametable object and link it to layout
     //nametable object code/views should be in a separate file(s) with their own
     //slots
+
+    statusbar->showMessage(tr("Nametable opened"), 4000);
+}
+
+
+/* Saves the open file to a given directory on disk */
+void MainWindow::saveFile(const QString& filepath) {
+    QFile file(filepath);
+
+    if (!file.open(QFile::WriteOnly)) {
+        QMessageBox::warning(this, tr("Save File"),
+                tr("Cannot write to file %1:\n%2")
+                .arg(filepath)
+                .arg(file.errorString()));
+        return;
+    }
+
+    //write to file first
+    ACTIVE_FILE = filepath;
+    statusbar->showMessage(tr("Nametable saved"), 4000);
 }
 
 /* Populate the menubar with menus and actions */
@@ -144,7 +176,7 @@ void MainWindow::initMenuBar(QMenuBar* menubar) {
     QAction* aboutqtAct = new QAction(tr("About Qt"), this);
 
     //make options/actions into checkboxes (simplest way)
-    fscreenAct->setCheckable(true);
+    //fscreenAct->setCheckable(true);
 
     //add keyboard shortcuts and bind them automatically to the choice
     newAct->setShortcut(QKeySequence::New);
@@ -152,9 +184,9 @@ void MainWindow::initMenuBar(QMenuBar* menubar) {
     saveAct->setShortcut(QKeySequence::Save);
     saveasAct->setShortcut(QKeySequence::SaveAs);
     quitAct->setShortcut(QKeySequence::Quit);
-    undoAct->setShortcut(QKeySequence::Undo);
-    redoAct->setShortcut(QKeySequence::Redo);
-    fscreenAct->setShortcut(QKeySequence::FullScreen);
+    undoAct->setShortcut(Qt::CTRL + Qt::Key_Z);
+    redoAct->setShortcut(Qt::CTRL + Qt::Key_Y);
+    fscreenAct->setShortcut(Qt::Key_F11);
 
     //show extra information when user hovers over the option
     newAct->setStatusTip(tr("Create a new Nametable"));
@@ -185,7 +217,7 @@ void MainWindow::initMenuBar(QMenuBar* menubar) {
     helpmenu->addAction(aboutqtAct);
 
     //link dropdown option action to the appropriate slot
-    connect(newAct, &QAction::triggered, this, &MainWindow::newfile);
+    connect(newAct, &QAction::triggered, this, &MainWindow::newf);
     connect(openAct, &QAction::triggered, this, &MainWindow::open);
     connect(saveAct, &QAction::triggered, this, &MainWindow::save);
     connect(saveasAct, &QAction::triggered, this, &MainWindow::saveas);
