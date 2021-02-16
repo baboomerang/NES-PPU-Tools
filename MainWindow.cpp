@@ -10,6 +10,17 @@
 #include "MainWindow.hpp"
 
 
+//TODO: emit a signal when the document is modified: "documentModified"
+//      this will alert the user to save their latest changes before quitting, or
+//      creating a new file.
+//
+//      use a custom quit() slot which checks for the "documentModififed" signal
+//      and prompts the user if they want to save their changes first
+//
+//      create a recent files submenu just like every other program on the planet
+//      so the user can choose older, recent files to open
+
+
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     setUnifiedTitleAndToolBarOnMac(true); 
     setAttribute(Qt::WA_DeleteOnClose);
@@ -31,7 +42,9 @@ MainWindow::~MainWindow() {
 /* SLOTS */
 
 void MainWindow::newf() {
-
+    ACTIVE_FILE = "";
+    //TODO: DESTROY THE CURRENT NAMETABLE VIEW, UNLOAD THE ATTRIBUTE TABLE AND
+    //UNLOAD THE PALLETE
 }
 
 void MainWindow::open() {
@@ -91,13 +104,6 @@ void MainWindow::fullscreen() {
     setWindowState(currentstate ^ Qt::WindowFullScreen);
 }
 
-/*
-void QMainWindow::changeEvent(QEvent* eventg) {
-    if (event->type() == QEvent::WindowStateChange) {
-
-    }
-}
-*/
 
 /* FUNCTIONS */
 
