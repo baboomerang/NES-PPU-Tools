@@ -178,8 +178,8 @@ void MainWindow::initMenuBar(QMenuBar* menubar) {
     QAction* redoAct = new QAction(tr("&Redo"), this);
     QAction* prefsAct = new QAction(tr("&Preferences"), this);
     QAction* fscreenAct = new QAction(tr("Fullscreen"), this);
-    QAction* aboutAct = new QAction(tr("About"), this);
-    QAction* aboutqtAct = new QAction(tr("About Qt"), this);
+    QAction* aboutAct = new QAction(tr("&About"), this);
+    QAction* aboutqtAct = new QAction(tr("About &Qt"), this);
 
     //make options/actions into checkboxes (simplest way)
     //fscreenAct->setCheckable(true);
